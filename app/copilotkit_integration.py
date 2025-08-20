@@ -6,7 +6,6 @@ import inspect
 from typing import List, Optional, Any, cast
 
 from django.http import JsonResponse, StreamingHttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from copilotkit.types import Message, MetaEvent
 from copilotkit import CopilotKitRemoteEndpoint, CopilotKitContext
 from copilotkit.exc import (
@@ -36,8 +35,6 @@ def body_get_or_raise(body: Any, key: str):
         return JsonResponse({"error": f"{key} is required"}, status=400)
     return value
 
-
-@csrf_exempt
 async def copilotkit_handler(request, path=""):
     try:
         body = json.loads(request.body.decode()) if request.body else {}
@@ -48,7 +45,6 @@ async def copilotkit_handler(request, path=""):
     method = request.method.upper()
     context = get_context(request, body)
 
-    print('path is - ', path)
     # ----------------- /info -----------------
     if method in ["GET", "POST"] and path in ["", "info", "info/"]:
         return await handle_info(sdk=sdk, context=context, as_html=False)
