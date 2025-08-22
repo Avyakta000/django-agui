@@ -42,12 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'strawberry_django',
     'django_svelte_jsoneditor',
     'app',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'app.auth.middleware.GoogleBearerAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'assistant.urls'
@@ -128,3 +131,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS and CSRF for Next.js frontend domain(s)
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    os.getenv('NEXT_PUBLIC_APP_URL', 'http://localhost:3000'),
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    os.getenv('NEXT_PUBLIC_APP_URL', 'http://localhost:3000'),
+]

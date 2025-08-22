@@ -1,12 +1,13 @@
 import strawberry
-
+from strawberry.types import Info
+from app.auth.schema import AuthQuery
 # import the Query and Mutation classes from your feature-specific schema files
 from app.mcp.mcp_schema import Query as MCPQuery, Mutation as MCPMutation
 
 
 @strawberry.type
 # ── graphql: root query ───────────────────────────────────────────────────────
-class Query(MCPQuery):
+class Query(MCPQuery, AuthQuery):
     # if you had another schema, e.g., for users, you would inherit it here too:
     # class Query(MCPQuery, UserQuery):
     pass

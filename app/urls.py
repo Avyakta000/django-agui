@@ -3,6 +3,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from .integrations.copilotkit_integration import copilotkit_handler
 from strawberry.django.views import AsyncGraphQLView
+from app.graphql.view import GraphQLView
 from app.graphql.schema import schema
 
 urlpatterns = [
@@ -13,7 +14,7 @@ urlpatterns = [
     ),
     path(
         "graphql",
-        csrf_exempt(AsyncGraphQLView.as_view(schema=schema, graphiql=getattr(settings, "DEBUG", False))),
+        csrf_exempt(GraphQLView.as_view(schema=schema, graphiql=getattr(settings, "DEBUG", False))),
         name="graphql",
     ),
 ]

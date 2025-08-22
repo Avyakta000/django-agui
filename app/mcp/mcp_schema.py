@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import strawberry
 from strawberry.types import Info
-
+from app.graphql.permissions import IsAuthenticated
 from app.mcp.manager import mcp
 from app.mcp.models import MCPServer
 from app.mcp.types import (
@@ -53,7 +53,7 @@ class Query:
             )
         return result
 
-    @strawberry.field
+    @strawberry.field(permission_classes=[IsAuthenticated])
     # .. field: mcp_server_health
     async def mcp_server_health(self, info: Info, name: str) -> ServerHealthInfo:
         status, tools = await mcp.acheck_server_health(name)
@@ -69,7 +69,7 @@ class Query:
 @strawberry.type
 # ── graphql: mutation ────────────────────────────────────────────────────────
 class Mutation:
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAuthenticated])
     # .. mutation: save_mcp_server
     async def save_mcp_server(
         self,
@@ -106,12 +106,12 @@ class Mutation:
             updated_at=server.updated_at,
         )
 
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAuthenticated])
     # .. mutation: remove_mcp_server
     async def remove_mcp_server(self, info: Info, name: str) -> bool:
         return await mcp.aremove_server(name)
 
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAuthenticated])
     # .. mutation: set_mcp_server_enabled
     async def set_mcp_server_enabled(
         self, info: Info, name: str, enabled: bool
@@ -132,7 +132,7 @@ class Mutation:
             updated_at=server.updated_at,
         )
 
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAuthenticated])
     # .. mutation: connect_mcp_server
     async def connect_mcp_server(self, info: Info, name: str) -> ConnectionResult:
         success, message, tools = await mcp.connect_server(name)
@@ -156,7 +156,7 @@ class Mutation:
             connection_status=connection_status,
         )
 
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAuthenticated])
     # .. mutation: disconnect_mcp_server
     async def disconnect_mcp_server(self, info: Info, name: str) -> DisconnectResult:
         success, message = await mcp.disconnect_server(name)
@@ -165,7 +165,7 @@ class Mutation:
             message=message,
         )
 
-    @strawberry.mutation
+    @strawberry.mutation(permission_classes=[IsAuthenticated])
     # .. mutation: restart_mcp_server
     async def restart_mcp_server(self, info: Info, name: str) -> ConnectionResult:
         status, tools = await mcp.acheck_server_health(name)

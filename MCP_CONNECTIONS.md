@@ -1,5 +1,33 @@
 # MCP Server Connection Management
 
+## Auth and Next.js
+
+When calling the Django GraphQL API from Next.js with NextAuth (Google provider), send the Google ID token as a Bearer token:
+
+1. Obtain a fresh Google ID token on the client (or inside Next.js Route Handler) and forward it to Django:
+
+```ts
+// example: Next.js route handler /api/graphql-proxy
+import { NextRequest, NextResponse } from 'next/server'
+
+export async function POST(req: NextRequest) {
+  const body = await req.text()
+  // get id_token from your NextAuth session or Google client
+  const idToken = await getGoogleIdToken()
+  const resp = await fetch(process.env.DJANGO_API_URL + '/api/graphql', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'authorization': `Bearer ${idToken}`,
+    },
+    body,
+  })
+  return new NextResponse(resp.body, { status: resp.status, headers: resp.headers })
+}
+```
+
+2. Set `GOOGLE_CLIENT_ID` in the Django environment for audience validation.
+
 This document describes the new connect/disconnect functionality for MCP servers in the Django AGUI application.
 
 ## Overview
