@@ -17,7 +17,7 @@ from app.mcp.types import (
 @strawberry.type
 # ── graphql: query ───────────────────────────────────────────────────────────
 class Query:
-    @strawberry.field
+    @strawberry.field(permission_classes=[IsAuthenticated])
     # .. field: mcp_servers
     async def mcp_servers(self, info: Info) -> List[MCPServerType]:
         mcp_servers = await mcp.alist_servers()

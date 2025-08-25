@@ -43,7 +43,7 @@ class GoogleBearerAuthMiddleware(MiddlewareMixin):
             request.user = getattr(request, "user", AnonymousUser())
             return None
 
-        # Attach a lightweight user object; optionally map to Django users later
+        # attach a lightweight user object; optionally map to Django users later
         request.user = AuthenticatedUser(id=info.sub, email=info.email, is_authenticated=True)
         request.auth_claims = {
             "sub": info.sub,
@@ -51,7 +51,6 @@ class GoogleBearerAuthMiddleware(MiddlewareMixin):
             "email_verified": info.email_verified,
             "name": info.name,
             "picture": info.picture,
-            "provider": "google",
         }
         print(f"[auth] authenticated: {info.email} (sub={info.sub})")
         return None

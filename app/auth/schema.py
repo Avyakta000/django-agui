@@ -21,7 +21,6 @@ class AuthQuery:
             email_verified=bool(claims.get("email_verified", False)),
             name=claims.get("name"),
             picture=claims.get("picture"),
-            provider=str(claims.get("provider", "google")),
         )
 
 
