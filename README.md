@@ -69,6 +69,36 @@ A Django application that integrates CopilotKit with LangGraph agents for AI-pow
    ```bash
    uvicorn assistant.asgi:application --reload
    ```
+### Example Nextjs: `app/api/copilotkit/route.ts`
+
+```ts
+import { NextRequest } from "next/server";
+import {
+  CopilotRuntime,
+  EmptyAdapter,
+  copilotRuntimeNextJSAppRouterEndpoint,
+} from "@copilotkit/runtime";
+
+const serviceAdapter = new EmptyAdapter();
+
+const runtime = new CopilotRuntime({
+  remoteEndpoints: [
+    {
+      url: `${process.env.NEXT_PUBLIC_DJANGO_SERVER_URL || "http://localhost:8000"}/api/copilotkit`,
+    },
+  ],
+});
+
+export async function POST(req: NextRequest) {
+  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+    runtime,
+    serviceAdapter,
+    endpoint: "/api/copilotkit",
+  });
+
+  return handleRequest(req);
+}
+```
 
 ## API Endpoints
 
